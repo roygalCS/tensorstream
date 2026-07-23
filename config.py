@@ -13,7 +13,7 @@ import torch
 class PipelineConfig:
     """Configuration for the video analytics pipeline."""
     
-    # ============ VIDEO PARAMETERS ============
+    # ============ VIDEO PARAMS ============
     video_path: str = "sample_video.mp4"  # Path to input video
     output_dir: str = "results/"  # Where to save results
     

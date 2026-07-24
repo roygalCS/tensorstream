@@ -13,11 +13,11 @@ import torch
 class PipelineConfig:
     """Configuration for the video analytics pipeline."""
     
-    # ============ VIDEO PARAMS ============
+    # ============ VIDEO PARAMS ===========
     video_path: str = "sample_video.mp4"  # Path to input video
     output_dir: str = "results/"  # Where to save results
     
-    # ============ MODEL PARAMETERS ============
+    # ============ MODEL PARAMETERS ===========
     model_name: str = "resnet18"  # Which model to use
     input_size: int = 224  # Input image size (224x224)
     num_classes: int = 1000  # ResNet18 pretrained on ImageNet (1000 classes)

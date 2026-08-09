@@ -1,9 +1,3 @@
-"""
-config.py - Configuration for Video Pipeline
-
-All parameters in one place. Tune these to optimize for your hardware.
-"""
-
 from dataclasses import dataclass
 from pathlib import Path
 import torch
@@ -11,13 +5,12 @@ import torch
 
 @dataclass
 class PipelineConfig:
-    """Configuration for the video analytics pipeline."""
     
-    # ============ VIDEO PARAMS ===========
-    video_path: str = "sample_video.mp4"  # Path to input video
-    output_dir: str = "results/"  # Where to save results
+    # video params
+    video_path: str = "sample_video.mp4"
+    output_dir: str = "results/"
     
-    # ============ MODEL PARAMETERS ===========
+    #model params
     model_name: str = "resnet18"  # Which model to use
     input_size: int = 224  # Input image size (224x224)
     num_classes: int = 1000  # ResNet18 pretrained on ImageNet (1000 classes)

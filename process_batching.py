@@ -34,8 +34,9 @@ class FramePreprocessor:
         
         # ImageNet normalization constants
         # These are standard values used when training ResNet on ImageNet
-        self.mean = np.array([0.485, 0.456, 0.406])  # R, G, B
-        self.std = np.array([0.229, 0.224, 0.225])   # R, G, B
+        # float32 so the normalized frame stays float32 (torch models reject float64)
+        self.mean = np.array([0.485, 0.456, 0.406], dtype=np.float32)  # R, G, B
+        self.std = np.array([0.229, 0.224, 0.225], dtype=np.float32)   # R, G, B
     
     def preprocess(self, frame: np.ndarray) -> torch.Tensor:
         """

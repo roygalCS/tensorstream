@@ -263,7 +263,7 @@ def main() -> None:
     parser.add_argument("--video", default="sample_video.mp4")
     parser.add_argument("--mode", choices=["pipelined", "baseline", "both"], default="both")
     parser.add_argument("--model", default="resnet18")
-    parser.add_argument("--batch-size", type=int, default=4)
+    parser.add_argument("--batch-size", type=int, default=32)
     parser.add_argument("--input-size", type=int, default=224)
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--loops", type=int, default=3,

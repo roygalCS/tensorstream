@@ -25,12 +25,17 @@ Usage:
 
 import argparse
 import math
+import multiprocessing as mp
 import shutil
 import subprocess
 import threading
 import time
-from multiprocessing import Event, Process, Queue
 from pathlib import Path
+
+# 'spawn' (not 'fork'): the inference stage touches CUDA, and CUDA context +
+# fork() in the parent is unsafe. spawn re-imports this module in each child,
+# so every process target below is module-level and every arg is picklable.
+MP = mp.get_context("spawn")
 
 import cv2
 import torch
@@ -172,19 +177,19 @@ def _bench_inference(in_queue, stop_event, config, result_queue):
 
 
 def run_pipelined(config, loops, warmup_s, cooldown_s):
-    raw_q = Queue(maxsize=config.ingestion_queue_size)
-    bat_q = Queue(maxsize=config.batching_queue_size)
-    res_q = Queue()
-    stop = Event()
+    raw_q = MP.Queue(maxsize=config.ingestion_queue_size)
+    bat_q = MP.Queue(maxsize=config.batching_queue_size)
+    res_q = MP.Queue()
+    stop = MP.Event()
 
     procs = [
-        Process(target=_looping_ingestion,
-                args=(config.video_path, raw_q, stop, loops), name="ingestion"),
-        Process(target=batching_process,
-                args=(raw_q, bat_q, stop, config.batch_size, config.input_size, False),
-                name="batching"),
-        Process(target=_bench_inference,
-                args=(bat_q, stop, config, res_q), name="inference"),
+        MP.Process(target=_looping_ingestion,
+                   args=(config.video_path, raw_q, stop, loops), name="ingestion"),
+        MP.Process(target=batching_process,
+                   args=(raw_q, bat_q, stop, config.batch_size, config.input_size, False),
+                   name="batching"),
+        MP.Process(target=_bench_inference,
+                   args=(bat_q, stop, config, res_q), name="inference"),
     ]
 
     sampler = GpuSampler()
